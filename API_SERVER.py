@@ -1,0 +1,42 @@
+from flask import Flask, request, send_file
+from flask_cors import CORS
+from mysql_DB import add_video_to_DB, get_file_path
+
+##
+# add empty directory "video" to git
+##
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/get_video", methods=['POST'])
+def get_video():
+    if request.method == 'POST':
+        file_name = request.form['file_name']
+        
+        try:
+            DB_response = get_file_path(file_name)
+            if DB_response["status"] == "SUCCESS":
+                print("$$$$$$$",DB_response["file_path"])
+                return send_file(f"{DB_response["file_path"]}", as_attachment=True)
+        except FileNotFoundError:
+            return {"status":"FAILED",
+                    "request_method":request.method,
+                    "error":"FileNotFoundError"}
+
+
+@app.route("/add_video", methods=['POST'])
+def add_video():
+    if request.method == 'POST':
+        file = request.files['file_upload'] 
+        if file:
+            file_path = f"videos/{file.filename}"
+            file.save(file_path)
+            DB_response = add_video_to_DB(file_name=file.filename,dir_path="videos/")
+
+            return {"status":"SUCCESS",
+                    "request_method":request.method,
+                    "response":DB_response}
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5004, use_reloader = True)
