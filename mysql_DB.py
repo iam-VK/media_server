@@ -67,7 +67,6 @@ def insert_videos(vid_dir:str="Shorts_Videos"):
         print("Error inserting video data into videos table:", error)
 
 
-
 def add_video_to_DB(file_name:str,dir_path:str="videos/"):
     dbcursor = db.cursor()
 
@@ -79,6 +78,7 @@ def add_video_to_DB(file_name:str,dir_path:str="videos/"):
         result=dbcursor.fetchone()
 
         if result:
+            dbcursor.close()
             print(f"Video File: {result} already exists in DB")
             return {"status":"FileAlreadyExists",
                 "module":"add_video",
@@ -195,8 +195,8 @@ def sort_video_categories_table():
                 GROUP BY videos.video_id, videos.file_name, categories.category_name, categories.category_id;'''
         
         
-        dbcursor.execute(sort_table)
         dbcursor.execute(count_frequency)
+        dbcursor.execute(sort_table)
         db.commit()
 
         print(f"$$ Table (video_categories) updated with category_frequency and sorted")

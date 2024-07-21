@@ -18,7 +18,7 @@ def get_video():
             DB_response = get_file_path(file_name)
             if DB_response["status"] == "SUCCESS":
                 print("$$$$$$$",DB_response["file_path"])
-                return send_file(f"{DB_response["file_path"]}", as_attachment=True)
+                return send_file(DB_response["file_path"], as_attachment=False)
         except FileNotFoundError:
             return {"status":"FAILED",
                     "request_method":request.method,
