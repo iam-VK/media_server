@@ -2,12 +2,28 @@ from flask import Flask, request, send_file
 from flask_cors import CORS
 from mysql_DB import add_video_to_DB, get_file_path
 
-##
-# add empty directory "video" to git
-##
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route("/", methods=['POST', 'GET'])
+def service_status():
+    return {
+        "Status": 'Alive',
+        "End-points": {
+            "/add_video": {
+                "method": "POST",
+                "parameter": "file_upload",
+                "data": "video file"
+            },
+            "/get_video": {
+                "method": "POST",
+                "parameter": "file_name",
+                "data": "requested video file name"
+            }
+        }
+    }
+
 
 @app.route("/get_video", methods=['POST'])
 def get_video():

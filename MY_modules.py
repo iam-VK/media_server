@@ -52,11 +52,7 @@ def json_parser(input_data,img_dir:str="key_frames"):
 
 def prepare_output_dir(output_path:str):
     isExist = os.path.exists(output_path)
-    if isExist:
-        old_files = glob.glob(output_path+'/*')
-        for f in old_files:
-            os.remove(f)
-    else:
+    if not isExist:
         os.makedirs(output_path)
     
     return output_path
