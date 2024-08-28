@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file
 from flask_cors import CORS
 from mysql_DB import add_video_to_DB, get_file_path
+from MY_modules import prepare_output_dir
 
 
 app = Flask(__name__)
@@ -46,6 +47,7 @@ def add_video():
     if request.method == 'POST':
         file = request.files['file_upload'] 
         if file:
+            prepare_output_dir('videos')
             file_path = f"videos/{file.filename}"
             file.save(file_path)
             DB_response = add_video_to_DB(file_name=file.filename,dir_path="videos/")
