@@ -52,6 +52,8 @@ def add_video():
             file.save(file_path)
             DB_response = add_video_to_DB(file_name=file.filename,dir_path="videos/")
 
+            ## send request to orchestrator service ##
+
             return {"status":"SUCCESS",
                     "request_method":request.method,
                     "response":DB_response}
